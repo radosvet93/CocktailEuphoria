@@ -1,0 +1,12 @@
+{
+  "name": "Cocktail Euphoria",
+  "displayName": "Cocktail Euphoria",
+  "expo": {
+    "name": "Cocktail Euphoria",
+    "slug": "CocktailEuphoria",
+    "version": "0.1.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
