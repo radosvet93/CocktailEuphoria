@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Text, Button, ListItem, Avatar, Input } from "react-native-elements";
 import { View, ScrollView, SafeAreaView } from "react-native";
-import { useGetCocktailsByName } from "../services/useGetCocktailByName";
+import { useGetCocktailsByName } from "../hooks/useGetCocktailByName";
 
 const Search = ({ styles, navigation }) => {
   const [cocktail, setCocktail] = useState("");

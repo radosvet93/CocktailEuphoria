@@ -1,48 +1,80 @@
-import React from "react";
-import { Text, Card, ListItem } from "react-native-elements";
-import { View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Text, Card, ListItem, Avatar, Button } from "react-native-elements";
+import { View, SafeAreaView, ScrollView } from "react-native";
+import { getIngredientImg } from "../helpers/getIngredientImg";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { StyleSheet } from "react-native";
 
 const Details = ({ route }) => {
+  const [playing, setPlaying] = useState(false);
   console.log("cocktail", route.params);
   const detail = route.params.cocktail;
 
+  const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+      setPlaying(false);
+    }
+  }, []);
+
   return (
     <>
-      <Card>
-        <Card.Title>{detail.strDrink}</Card.Title>
-        <Card.Image source={{ uri: detail.strDrinkThumb }} />
-        <ListItem bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>Glass: {detail.strGlass}</ListItem.Title>
-            <ListItem.Subtitle>{detail.strInstructions}</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>{detail.strIngredient1}</ListItem.Title>
-            <ListItem.Subtitle>{detail.strMeasure1}</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>{detail.strIngredient2}</ListItem.Title>
-            <ListItem.Subtitle>{detail.strMeasure2}</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem>
-          <ListItem.Content>
-            <ListItem.Title>{detail.strIngredient3}</ListItem.Title>
-            <ListItem.Subtitle>{detail.strMeasure3}</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-      </Card>
-      {/* <View>
+      <SafeAreaView>
+        <ScrollView style={styles}>
+          <Card>
+            <Card.Title>{detail.strDrink}</Card.Title>
+            <Card.Image source={{ uri: detail.strDrinkThumb }} />
+            <ListItem bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>Glass: {detail.strGlass}</ListItem.Title>
+                <ListItem.Subtitle>{detail.strInstructions}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem bottomDivider>
+              <Avatar size="xlarge" source={{ uri: getIngredientImg(detail.strIngredient1, "medium") }} containerStyle={{ border: "1px solid black" }} />
+              <ListItem.Content>
+                <ListItem.Title>{detail.strIngredient1}</ListItem.Title>
+                <ListItem.Subtitle>{detail.strMeasure1}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>{detail.strIngredient2}</ListItem.Title>
+                <ListItem.Subtitle>{detail.strMeasure2}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem>
+              <ListItem.Content>
+                <ListItem.Title>{detail.strIngredient3}</ListItem.Title>
+                <ListItem.Subtitle>{detail.strMeasure3}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <Text>{detail.strVideo}</Text>
+            <View>
+              <YoutubePlayer style={{ flex: 1 }} height={200} play={playing} videoId={"ApMR3IWYZHI"} onChangeState={onStateChange} />
+            </View>
+          </Card>
+
+          {/* <View>
         <Text h3>{detail.strDrink}</Text>
         <Image source={{ uri: detail.strDrinkThumb }} />
       </View> */}
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+  },
+});
+
+// I was able to get WebView in react native apps to work with unavailable videos by loading the source via html and adding the baseUrl property. ( Note that originWhiteList needs to be set to ['*'] per WebView docs)
+// <code><WebView
+// originWhitelist={['*']}
 
 // dateModified: "2017-02-20 15:07:58"
 // idDrink: "12726"
