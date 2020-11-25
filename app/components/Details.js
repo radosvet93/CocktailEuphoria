@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useLayoutEffect } from "react";
 import { Text, Card, ListItem, Avatar, Button } from "react-native-elements";
 import { View, SafeAreaView, ScrollView } from "react-native";
 import { getIngredientImg } from "../helpers/getIngredientImg";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { StyleSheet } from "react-native";
 
-const Details = ({ route }) => {
+const Details = ({ route, styles }) => {
   const [playing, setPlaying] = useState(false);
   console.log("cocktail", route.params);
   const detail = route.params.cocktail;
+  const title = detail && detail.strDrink;
 
   const onStateChange = useCallback((state) => {
     if (state === "ended") {
@@ -16,13 +16,14 @@ const Details = ({ route }) => {
     }
   }, []);
 
+  console.log("styles", styles);
+
   return (
     <>
       <SafeAreaView>
-        <ScrollView style={styles}>
+        <ScrollView contentContainerStyle={styles.container}>
           <Card>
-            <Card.Title>{detail.strDrink}</Card.Title>
-            <Card.Image source={{ uri: detail.strDrinkThumb }} />
+            <Card.Image style={{ height: 300 }} source={{ uri: detail.strDrinkThumb }} />
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>Glass: {detail.strGlass}</ListItem.Title>
@@ -50,27 +51,15 @@ const Details = ({ route }) => {
             </ListItem>
             <Text>{detail.strVideo}</Text>
             <View>
+              {/* TODO: get the video id */}
               <YoutubePlayer style={{ flex: 1 }} height={200} play={playing} videoId={"ApMR3IWYZHI"} onChangeState={onStateChange} />
             </View>
           </Card>
-
-          {/* <View>
-        <Text h3>{detail.strDrink}</Text>
-        <Image source={{ uri: detail.strDrinkThumb }} />
-      </View> */}
         </ScrollView>
       </SafeAreaView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
-});
 
 // I was able to get WebView in react native apps to work with unavailable videos by loading the source via html and adding the baseUrl property. ( Note that originWhiteList needs to be set to ['*'] per WebView docs)
 // <code><WebView
