@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { cocktailDBTest } from "../constants/urls";
 
 export const useGetCocktailsByName = (name) => {
@@ -10,8 +9,8 @@ export const useGetCocktailsByName = (name) => {
   async function getCocktails() {
     try {
       setIsLoading(true);
-      const path = `${cocktailDBTest}/search.php?s=${name}`;
-      const response = await fetch(path);
+      const endpoint = `${cocktailDBTest}/search.php?s=${name}`;
+      const response = await fetch(endpoint);
       const responseJson = await response.json();
 
       console.log("response", responseJson);
@@ -26,22 +25,9 @@ export const useGetCocktailsByName = (name) => {
         setError(`No drinks found with the name '${name}'`);
       }
     } catch (error) {
+      console.error(error);
       setError("No drinks found!");
     }
-    // axios
-    //   .get(path)
-    //   .then(({ data: { drinks } }) => {
-    //     setIsLoading(false);
-    //     if (drinks) {
-    //       setCocktails(drinks);
-    //     } else {
-    //       setCocktails([]);
-    //       setError("No drinks founds");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setError(error);
-    //   });
   }
 
   return { isLoading, cocktails, getCocktails, error };
